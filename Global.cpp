@@ -30,10 +30,10 @@ const double ioncharge = param.IONCHARGE;
 const double electcharge = param.ELECTCHARGE;
 const int initParticle = param.INITIAL_PARTICLE;
 
-const double lambda = param.EPS_0 * param.MU_0 * param.ETEMP * param.QE / param.ME;
-const double normEl = sqrt(param.ETEMP * param.QE * param.DENSITY / param.EPS_0);
+const double lambda = param.EPS_0 * param.MU_0 * param.TEMPERATURE * param.QE / param.ME;
+const double normEl = sqrt(param.TEMPERATURE * param.QE * param.DENSITY / param.EPS_0);
 const double normEt = normEl * lambda;
-const double normB = normEl * param.EPS_0 * param.MU_0 * sqrt(param.ETEMP * param.QE / param.ME);
+const double normB = normEl * param.EPS_0 * param.MU_0 * sqrt(param.TEMPERATURE * param.QE / param.ME);
 
 const Vector3D<double> B_0(param.BX/normB, param.BY/normB, 0);
 vector<double> omegaTable(2 * param.MAX_ITERATION);
@@ -55,7 +55,7 @@ void initialGlobal()
 	double Pi = param.PI;
 	double rho_Jac = (cos(Pi / rank_x) + pow(dx / dy, 2)*cos(2 * Pi / rank_y)) / (1 + pow(dx / dy, 2));
 	
-	omegaTable[0] = 1;
+	omegaTable[0] = 1.0;
 	omegaTable[1] = 1.0 / (1 - 0.5 * pow(rho_Jac, 2));
 
 	for (int i = 2; i < 2*param.MAX_ITERATION; i++)

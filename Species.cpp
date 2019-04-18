@@ -80,14 +80,14 @@ double generateMaxwellBeamFlux(double alpha, double vt, double vb)
 void Species::initialMaxwell(Param &param) 
 {   
 	/* uniformlly distributed in x-y space, maxwell distributed in v space */
-	part.reserve(param.INITIAL_PARTICLE * 2);
+	part.reserve(param.INITIAL_PARTICLE);
 
 	for (int i = 1; i <= param.INITIAL_PARTICLE_X; i++)
 	{
 		double x = param.LBOUND + (param.RBOUND - param.LBOUND) * i / (param.INITIAL_PARTICLE_X + 1);
 		for (int j = 1; j <= param.INITIAL_PARTICLE_Y; j++)
 		{
-			double y = param.LBOUND + (param.UBOUND - param.DBOUND) * i / (param.INITIAL_PARTICLE_Y + 1);
+			double y = param.DBOUND + (param.UBOUND - param.DBOUND) * i / (param.INITIAL_PARTICLE_Y + 1);
 			double vx = generateMaxwell(0, sqrt(tx / mass));
 			double vy = generateMaxwell(0, sqrt(ty / mass));
 			double vz = generateMaxwell(0, sqrt(tz / mass));

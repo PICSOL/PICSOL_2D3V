@@ -52,6 +52,7 @@ public:
 
 	/* plasma parameters */
 	double  DENSITY;            // characteristic plasma density 
+	double  TEMPERATURE;        // characteristic plasma temperature
 	double  ETEMP;              // electron temperature, normalized to electron temperature
 	double  ITEMP;              // ion temperature, normalized to electron temperature
 	double  ELECTCHARGE;        // electron charge, normalized to elementary charge

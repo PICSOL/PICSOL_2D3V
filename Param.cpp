@@ -35,6 +35,12 @@ Param::Param()
 	INITIAL_PARTICLE = atoi(buffer);
 
 	in.getline(buffer, 256);
+	INITIAL_PARTICLE_X = atoi(buffer);
+
+	in.getline(buffer, 256);
+	INITIAL_PARTICLE_Y = atoi(buffer);
+
+	in.getline(buffer, 256);
 	DELTA_T = atof(buffer);
 
 	in.getline(buffer, 256);
@@ -58,6 +64,9 @@ Param::Param()
 	/* plasma parameters */
 	in.getline(buffer, 256);
 	DENSITY = atof(buffer);
+
+	in.getline(buffer, 256);
+	TEMPERATURE = atof(buffer);
 
 	in.getline(buffer, 256);
 	ETEMP = atof(buffer);

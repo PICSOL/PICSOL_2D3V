@@ -86,13 +86,25 @@ void ElComp(scalarField &phi, vectorField &E_l)
 void BComp(vectorField &J, vectorField &B)
 {
 	rotation(vTemp, J, -1.0);
-	//poissonSOR(B.xval, vTemp.xval);
-	//poissonSOR(B.yval, vTemp.yval);
-	//poissonSOR(B.zval, vTemp.zval);
 
-	poissonFFT(B.xval, vTemp.xval, FFTbound, FFTbound, FFTbound, FFTbound);
-	poissonFFT(B.yval, vTemp.yval, FFTbound, FFTbound, FFTbound, FFTbound);
-	poissonFFT(B.zval, vTemp.zval, FFTbound, FFTbound, FFTbound, FFTbound);
+	/* OpenMP multithreading area for field updater */
+    #pragma omp parallel default(shared)
+	{
+        #pragma omp sections nowait
+		{
+            #pragma omp section
+			poissonFFT(B.xval, vTemp.xval, FFTbound, FFTbound, FFTbound, FFTbound);
+			//poissonSOR(B.xval, vTemp.xval);
+
+            #pragma omp section
+			poissonFFT(B.yval, vTemp.yval, FFTbound, FFTbound, FFTbound, FFTbound);
+			//poissonSOR(B.yval, vTemp.yval);
+
+            #pragma omp section
+			poissonFFT(B.zval, vTemp.zval, FFTbound, FFTbound, FFTbound, FFTbound);
+			//poissonSOR(B.zval, vTemp.zval);
+		}
+	}
 
 	/* add background field */
 	B.add(B_0);
@@ -115,15 +127,26 @@ void EtComp(scalarField &rho, vectorField &Current, vectorField &Convect, vector
 		}
 	}
 
-	/* solve three helmholtz equations */
-	helmholtzSOR(E_t.xval, vTemp.xval, sTemp.val);
-	helmholtzSOR(E_t.yval, vTemp.yval, sTemp.val);
-	helmholtzSOR(E_t.zval, vTemp.zval, sTemp.val);
+	/* OpenMP multithreading area for field updater */
+    #pragma omp parallel default(shared)
+	{
+        #pragma omp sections nowait
+		{
+            #pragma omp section
+			helmholtzSOR(E_t.xval, vTemp.xval, sTemp.val);
+
+            #pragma omp section
+			helmholtzSOR(E_t.yval, vTemp.yval, sTemp.val);
+
+            #pragma omp section
+			helmholtzSOR(E_t.zval, vTemp.zval, sTemp.val);
+		}
+	}
 
 	divergence(sTemp, E_t, 1.0);
 
+	poissonFFT(Theta.val, sTemp.val, FFTbound, FFTbound, FFTbound, FFTbound);	
 	//poissonSOR(Theta.val, sTemp.val);
-	poissonFFT(Theta.val, sTemp.val, FFTbound, FFTbound, FFTbound, FFTbound);
     
 	/* substract the divergence part to abtain authentic E_t */
 	gradient(vTemp, Theta, 1.0);

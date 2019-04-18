@@ -1,6 +1,7 @@
 /*
 *  2N-point real-valued DFT/IDFT using N-point complex-valued FFT/IFFT.
-*  no length check, no exception mechanism, sinTable & cosTable is precomputed for efficiency
+*  no length check, no exception mechanism, sinTable,cosTable,Ar,Ai,Br,Bi 
+   is precomputed for efficiency.
 *  edited by Huaxiang Zhang 2019/3/26
 */
 

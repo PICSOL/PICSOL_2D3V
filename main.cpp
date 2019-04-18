@@ -5,6 +5,7 @@
 #include "Species.h"
 #include "Param.h"
 #include "fieldUpdater.h"
+#include "fieldEnergy.h"
 #include "Pusher.h"
 #include "Smooth.h"
 #include "Gather.h"
@@ -13,10 +14,10 @@
 #include "Global.h"
 
 /********************************************************************************************************* 
- PICSOL is a 2d-3v fully kinetic electromagnetic PIC code developed by Huaxiang Zhang since 2018 Mar.28th, 
- which is primarily designed to simulate low-recycling SOL(Scrape-off Layer) plasma in tokamaks. Physical 
- model is based on 2D Vlasov-Darwin model, which is capable of discribing plasma's kinetic behavior without 
- electromagnetic wave. This code is open source to anyone who intend to use it. 
+ PICSOL is a 2d-3v fully kinetic parallel electromagnetic PIC code developed by Huaxiang Zhang since 2018 Mar.28th,
+ which is primarily designed to simulate low-recycling rate SOL(Scrape-off Layer) plasma biasing in tokamaks. 
+ PICSOL is built based on 2D Vlasov-Darwin model, which is capable of discribing plasma's kinetic behavior without 
+ electromagnetic wave. This code is open source to anyone who intends to use it. 
  The latest version can be downloaded from https://github.com/ZhangPlasma/PICSOL/
  Version Number: 1.02
 **********************************************************************************************************/

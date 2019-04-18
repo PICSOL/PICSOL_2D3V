@@ -11,4 +11,5 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <omp.h>
 using namespace std;

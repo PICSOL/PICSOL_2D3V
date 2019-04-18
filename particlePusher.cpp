@@ -6,16 +6,18 @@ void borisPusher(Particle<double> &part, double &alpha, double &beta, double &de
 	double electContrib_x = alpha * Ex;
 	double electContrib_y = alpha * Ey;
 	double electContrib_z = alpha * Ez;
+	double vx_minus, vy_minus, vz_minus;
+	double vx_prime, vy_prime, vz_prime;
 
 	for (int i = 0; i < loop; i++)
 	{
-		double vx_minus = part.vx + electContrib_x;
-		double vy_minus = part.vy + electContrib_y;
-		double vz_minus = part.vz + electContrib_z;
+		vx_minus = part.vx + electContrib_x;
+		vy_minus = part.vy + electContrib_y;
+		vz_minus = part.vz + electContrib_z;
 
-		double vx_prime = vx_minus + alpha * (vy_minus*Bz - vz_minus * By);
-		double vy_prime = vy_minus + alpha * (vz_minus*Bx - vx_minus * Bz);
-		double vz_prime = vz_minus + alpha * (vx_minus*By - vy_minus * Bx);
+		vx_prime = vx_minus + alpha * (vy_minus*Bz - vz_minus * By);
+		vy_prime = vy_minus + alpha * (vz_minus*Bx - vx_minus * Bz);
+		vz_prime = vz_minus + alpha * (vx_minus*By - vy_minus * Bx);
 
 		part.vx = vx_minus + electContrib_x + beta * (vy_prime*Bz - vz_prime * By);
 		part.vy = vy_minus + electContrib_y + beta * (vz_prime*Bx - vx_prime * Bz);
@@ -52,18 +54,20 @@ void modifiedBorisPusher(Particle<double> &part, double &alpha, double &beta, do
 	double electContrib_x = alpha * Ex;
 	double electContrib_y = alpha * Ey;
 	double electContrib_z = alpha * Ez;
+	double vx_minus, vy_minus, vz_minus;
+	double vx_prime, vy_prime, vz_prime, temp;
 
 	for (int i = 0; i < loop; i++)
 	{
-		double vx_minus = part.vx + alpha * electContrib_x;
-		double vy_minus = part.vy + alpha * electContrib_y;
-		double vz_minus = part.vz + alpha * electContrib_z;
+		vx_minus = part.vx + alpha * electContrib_x;
+		vy_minus = part.vy + alpha * electContrib_y;
+		vz_minus = part.vz + alpha * electContrib_z;
 
-		double temp = vx_minus * Bx + vy_minus * By + vz_minus * Bz;
+		temp = vx_minus * Bx + vy_minus * By + vz_minus * Bz;
 
-		double vx_prime = beta * (vx_minus + alpha * ((vy_minus*Bz - vz_minus * By) + alpha * temp * Bx));
-		double vy_prime = beta * (vy_minus + alpha * ((vz_minus*Bx - vx_minus * Bz) + alpha * temp * By));
-		double vz_prime = beta * (vz_minus + alpha * ((vx_minus*By - vy_minus * Bx) + alpha * temp * Bz));
+		vx_prime = beta * (vx_minus + alpha * ((vy_minus*Bz - vz_minus * By) + alpha * temp * Bx));
+		vy_prime = beta * (vy_minus + alpha * ((vz_minus*Bx - vx_minus * Bz) + alpha * temp * By));
+		vz_prime = beta * (vz_minus + alpha * ((vx_minus*By - vy_minus * Bx) + alpha * temp * Bz));
 
 		part.vx = 2 * vx_prime - part.vx;
 		part.vy = 2 * vy_prime - part.vy;
