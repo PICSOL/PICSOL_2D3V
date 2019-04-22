@@ -24,7 +24,7 @@ poissonSOR - 2D poisson solver using SOR iteration method, x is the leading inde
 
              Delta P(x,y) = Q(x,y) in which P(x=0,y) = psi(y), P(x=Lx,y) = phi(y), P(x,0) = P(x, Ly)
 */
-int poissonSOR(vector<vector<double>> &P, vector<vector<double>> &Q);
+void poissonSOR(vector<vector<double>> &P, vector<vector<double>> &Q);
 
 
 // The FFT method can only be applied to invariable coefficient elliptic equation, however in Darwin-Vlasov model, a variable 

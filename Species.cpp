@@ -80,18 +80,18 @@ double generateMaxwellBeamFlux(double alpha, double vt, double vb)
 void Species::initialMaxwell(Param &param) 
 {   
 	/* uniformlly distributed in x-y space, maxwell distributed in v space */
-	part.reserve(param.INITIAL_PARTICLE);
+	part.reserve(2 * param.INITIAL_PARTICLE);
 
+    #pragma omp parallel for
 	for (int i = 1; i <= param.INITIAL_PARTICLE_X; i++)
 	{
-		double x = param.LBOUND + (param.RBOUND - param.LBOUND) * i / (param.INITIAL_PARTICLE_X + 1);
+		double x = param.LBOUND + ((double)i - 0.5) * (double)(param.XLENGTH) / (double)(param.INITIAL_PARTICLE_X);
 		for (int j = 1; j <= param.INITIAL_PARTICLE_Y; j++)
 		{
-			double y = param.DBOUND + (param.UBOUND - param.DBOUND) * i / (param.INITIAL_PARTICLE_Y + 1);
+			double y = param.DBOUND + ((double)j - 0.5) * (double)(param.YLENGTH) / (double)(param.INITIAL_PARTICLE_Y);
 			double vx = generateMaxwell(0, sqrt(tx / mass));
 			double vy = generateMaxwell(0, sqrt(ty / mass));
 			double vz = generateMaxwell(0, sqrt(tz / mass));
-		    
 			part.push_back(Particle<double>(x, y, vx, vy, vz));
 		}	
 	}
@@ -100,7 +100,9 @@ void Species::initialMaxwell(Param &param)
 double Species::kinetic()
 {
 	double kinetic = 0;
-	for (size_t i = 0; i < part.size(); i++)
+    
+    #pragma omp parallel for reduction(+:kinetic)
+	for (int i = 0; i < (int)part.size(); i++)
 	{
 		kinetic += 0.5 * mass * (part[i].vx * part[i].vx
 			                   + part[i].vy * part[i].vy
@@ -130,10 +132,8 @@ void Species::saveParticle(string directory)
 	for (size_t i = 0; i < part.size(); i++)
 	{
 		output_file.setf(ios::fixed);
-		output_file.precision(9);
-		output_file << part[i].x << '\t' << part[i].y
-			<< part[i].vx << '\t' << part[i].vy
-			<< '\t' << part[i].vz << endl;
+		output_file.precision(6);
+		output_file << part[i].x << '\t' << part[i].y << '\t' << part[i].vx << '\t' << part[i].vy << '\t' << part[i].vz << endl;
 	}
 }
 

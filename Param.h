@@ -18,6 +18,9 @@ public:
 	const double  PI = 3.14159265358979;     // circumference ratio
 	const double  e = 2.718281828459045;     // base of natural logarithm
 
+	/* parameter set ID number */
+	int parameterID;
+
 	/* data storage path */
 	string PATH;
 
@@ -68,9 +71,11 @@ public:
 	double L_0;                 // biasing length 
 	double L_1;                 // length of the slope
 
+	/* openMP parameters */
+	int MAX_THREADS;            // maximum thread number in openMP 
 
     /* function list */
-	Param();                                                     // loading simulation constant from given directory
+	Param(int parameterID);                                               // loading simulation constant from given directory
     void copyFile(string& input, string& ouput, string& dir);    // copy file as a binary file
 	void saveInput(string& destname);                            // save input data 
 };

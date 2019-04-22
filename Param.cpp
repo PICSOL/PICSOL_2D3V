@@ -1,9 +1,15 @@
 #include "Param.h"
 
-Param::Param()
+Param::Param(int parameterID)
 {
-	ifstream in("param.txt", ios::in);
+	ifstream in("param.txt");
 	char buffer[256];
+
+	if (in.fail() || in.bad())
+	{
+		cerr << "CONSTANT FILE LOADING ERROR!";
+		system("pasuse");
+	}
 	
 	/* data storage path */
 	in.getline(buffer, 256);
@@ -98,11 +104,8 @@ Param::Param()
 	in.getline(buffer, 256);
 	L_1 = atof(buffer);
 
-	if (in.fail()||in.bad())
-	{
-		cerr << "CONSTANT FILE LOADING ERROR!";
-		system("pasuse");
-	}
+	in.getline(buffer, 256);
+	MAX_THREADS = atoi(buffer);
 
 /*
 	ifstream LBValue("leftBound.dat", ios::in);
@@ -137,6 +140,9 @@ Param::Param()
 		RB.push_back(0);
 	}
 
+	this->parameterID = parameterID;
+	omp_set_num_threads(MAX_THREADS);
+	cout << "parameter loading complete !" << endl;
 }
 
 void Param::copyFile(string& input,string& output, string& dir)

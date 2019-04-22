@@ -11,7 +11,6 @@
 Global variables declaration
 */
 
-/* simulation parameters class */
 extern Param param;
 
 /* simulation constant */
@@ -91,4 +90,4 @@ extern vector<double> cosTable;
 /*
 initialization for all global tables and variables
 */
-extern void initialGlobal();
+void initialGlobal(Param &param);

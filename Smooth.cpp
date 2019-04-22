@@ -2,7 +2,8 @@
 
 void smooth2D(scalarField &field)
 {
-	for (size_t i = 1; i < rank_x - 1; i++)
+    #pragma omp parallel for
+	for (int i = 1; i < (int)rank_x - 1; i++)
 	{
 		/* periodic boundary in y direction */
 		field.val[i][0] = 0.125 * (field.val[i][0] * 4 +
@@ -30,7 +31,8 @@ void smooth2D(scalarField &field)
 
 void smooth2D(vectorField &field)
 {
-	for (size_t i = 1; i < rank_x - 1; i++)
+    #pragma omp parallel for
+	for (int i = 1; i < (int)rank_x - 1; i++)
 	{
 		/* periodic boundary in y direction */
 		field.xval[i][0] = 0.125 * (field.xval[i][0] * 4 +

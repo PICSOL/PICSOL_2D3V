@@ -83,7 +83,7 @@ void poissonFFT(vector<vector<double>> &P, vector<vector<double>> &Q, vector<dou
 	}
 }
 
-int poissonSOR(vector<vector<double>> &P, vector<vector<double>> &Q)
+void poissonSOR(vector<vector<double>> &P, vector<vector<double>> &Q)
 {   
 	/* iteration criterion */
 	double Qnorm = 0;
@@ -137,7 +137,7 @@ int poissonSOR(vector<vector<double>> &P, vector<vector<double>> &Q)
 			P[i][rank_y - 1] -= omega * residual * idxy2;
 		}
 		if (norm < Qnorm)
-			return iter;
+			return;
 	}
 	cerr << "poissonSOR reaches maximum iterations !" << endl;
 }

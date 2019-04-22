@@ -3,8 +3,7 @@
 /*
 Global variables definition
 */
-
-Param param;
+Param param(0);
 const size_t rank_x = param.GRID_NUM_X;
 const size_t rank_y = param.GRID_NUM_Y;
 const double lbound = param.LBOUND;
@@ -35,8 +34,8 @@ const double normEl = sqrt(param.TEMPERATURE * param.QE * param.DENSITY / param.
 const double normEt = normEl * lambda;
 const double normB = normEl * param.EPS_0 * param.MU_0 * sqrt(param.TEMPERATURE * param.QE / param.ME);
 
-const Vector3D<double> B_0(param.BX/normB, param.BY/normB, 0);
-vector<double> omegaTable(2 * param.MAX_ITERATION);
+const Vector3D<double> B_0(param.BX / normB, param.BY / normB, 0);
+vector<double> omegaTable(param.MAX_ITERATION);
 vector<double> phi_m_real(param.GRID_NUM_Y);
 vector<double> phi_m_imag(param.GRID_NUM_Y);
 vector<double> psi_m_real(param.GRID_NUM_Y);
@@ -50,7 +49,7 @@ vector<double> BiTable(param.GRID_NUM_Y / 2);
 vector<double> sinTable(param.GRID_NUM_Y / 4);
 vector<double> cosTable(param.GRID_NUM_Y / 4);
 
-void initialGlobal()
+void initialGlobal(Param &param)
 {
 	double Pi = param.PI;
 	double rho_Jac = (cos(Pi / rank_x) + pow(dx / dy, 2)*cos(2 * Pi / rank_y)) / (1 + pow(dx / dy, 2));
@@ -58,7 +57,7 @@ void initialGlobal()
 	omegaTable[0] = 1.0;
 	omegaTable[1] = 1.0 / (1 - 0.5 * pow(rho_Jac, 2));
 
-	for (int i = 2; i < 2*param.MAX_ITERATION; i++)
+	for (int i = 2; i < param.MAX_ITERATION; i++)
 	{
 		omegaTable[i] = 1.0 / (1 - pow(rho_Jac, 2)*omegaTable[i - 1] / 4.0);
 	}
@@ -86,4 +85,5 @@ void initialGlobal()
 
 	RDFT(param.LB, phi_m_real, phi_m_imag);
 	RDFT(param.RB, psi_m_real, psi_m_imag);
+
 }

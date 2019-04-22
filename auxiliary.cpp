@@ -60,8 +60,7 @@ void recordLog(double INITIAL_PARTICLE, int main_iter, Species& electron, Specie
 	log_file << "Main loop number:" << main_iter << ",ion number contains " << 100.0 * ion.part.size() / INITIAL_PARTICLE << " %" << endl;
 	cout << "Main loop number:" << main_iter << ",ion kinetic energy " << 100.0 * ion.kinetic() / totalIonKinetic << " %" << endl;
 	cout << "Main loop number:" << main_iter << ",ion number contains " << 100.0 * ion.part.size() / INITIAL_PARTICLE << " %" << endl;
-	log_file <<"initialization complete!" << endl;
-	cout <<"initialization complete!" << endl;
+
 }
 
 void recordData(int main_iter, string directory, Species& electron, Species& ion, vectorField& electCurrent,
@@ -92,8 +91,8 @@ void recordData(int main_iter, string directory, Species& electron, Species& ion
 		       path + string("Bz.dat"));
 
 	/* save particle data */
-	electron.saveParticle(path + string("electron.dat"));
-	ion.saveParticle(path + string("ion.dat"));
+	//electron.saveParticle(path + string("electron.dat"));
+	//ion.saveParticle(path + string("ion.dat"));
 	electron.saveGlobal(path + string("electron_global.dat"));
 	ion.saveGlobal(path + string("ion_global.dat"));
 }

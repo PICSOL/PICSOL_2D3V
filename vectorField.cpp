@@ -36,16 +36,21 @@ vectorField::~vectorField()
 
 void vectorField::clear()
 {
+    #pragma omp parallel for
 	for (int i = 0; i < x_grid_num; i++)
 	{
-		xval[i].assign(y_grid_num, 0);
-		yval[i].assign(y_grid_num, 0);
-		zval[i].assign(y_grid_num, 0);
+		for (int j = 0; j < y_grid_num; j++)
+		{
+          xval[i][j] = 0;
+		  yval[i][j] = 0;
+		  zval[i][j] = 0;
+		}
 	}
 }
 
 void vectorField::multiply(double constant)
 {
+    #pragma omp parallel for
 	for (int i = 0; i < x_grid_num; i++)
 	{
 		for (int j = 0; j < y_grid_num; j++)
@@ -59,6 +64,7 @@ void vectorField::multiply(double constant)
 
 void vectorField::equal(Vector3D<double> vec)
 {
+    #pragma omp parallel for
 	for (int i = 0; i < x_grid_num; i++)
 	{
 		for (int j = 0; j < y_grid_num; j++)
@@ -72,6 +78,7 @@ void vectorField::equal(Vector3D<double> vec)
 
 void vectorField::sum(vectorField &a, vectorField &b)
 {
+    #pragma omp parallel for
 	for (int i = 0; i < x_grid_num; i++)
 	{
 		for (int j = 0; j < y_grid_num; j++)
@@ -85,6 +92,7 @@ void vectorField::sum(vectorField &a, vectorField &b)
 
 void vectorField::substract(vectorField &a)
 {
+    #pragma omp parallel for
 	for (int i = 0; i < x_grid_num; i++)
 	{
 		for (int j = 0; j < y_grid_num; j++)
@@ -98,6 +106,7 @@ void vectorField::substract(vectorField &a)
 
 void vectorField::add(Vector3D<double> vec)
 {
+    #pragma omp parallel for
 	for (int i = 0; i < x_grid_num; i++)
 	{
 		for (int j = 0; j < y_grid_num; j++)

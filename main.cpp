@@ -19,7 +19,7 @@
  PICSOL is built based on 2D Vlasov-Darwin model, which is capable of discribing plasma's kinetic behavior without 
  electromagnetic wave. This code is open source to anyone who intends to use it. 
  The latest version can be downloaded from https://github.com/ZhangPlasma/PICSOL/
- Version Number: 1.02
+ Version Number: 1.03
 **********************************************************************************************************/
 
 int main() {   
@@ -27,14 +27,15 @@ int main() {
 /*********************************************************************************************************/
 /* Input laoding */
 
-	/*initialize global variables */
-	initialGlobal();
-    
+    /*initialize global variables */
+	initialGlobal(param);
+
 	/* create data storage file folder based on system time */
 	string directory = recordFile(param.PATH);
 	
 	/* create log file for simulation run */
 	ofstream log_file = logFile(directory);
+	param.saveInput(directory);
 	
 	/* RNG seeding */
 	srand((unsigned int)time(NULL));
@@ -87,8 +88,9 @@ int main() {
 	/* electromagnetic field initialization */
 	phiComp(rho, Phi);
 	ElComp(Phi, E_l);
-	BComp(J, B);
-	EtComp(rho, J, convect, E_l, B, E_t);
+	//BComp(J, B); 
+	B.add(B_0);
+	//EtComp(rho, J, convect, E_l, B, E_t);
 	EtotalComp(E_l, E_t, E_total);
 
 	/* use electron advancing time as the minimal time step */
@@ -126,15 +128,15 @@ int main() {
 		/* electromagnetic field update */
 		phiComp(rho, Phi);
 		ElComp(Phi, E_l);
-		BComp(J, B);
-		EtComp(rho, J, convect, E_l, B, E_t);
+		//BComp(J, B);
+		//EtComp(rho, J, convect, E_l, B, E_t);
 		EtotalComp(E_l, E_t, E_total);
 
 		/* save data */
 		if (main_iter % param.RECORD_CHECK == 0)
 		{   
 			recordLog(param.INITIAL_PARTICLE, main_iter, electron, ion, totalElectKinetic, totalIonKinetic, log_file);
-			recordData(0, directory, electron, ion, electCurrent, electDen, ionCurrent, ionDen, Phi, rho, E_l, E_t, B);
+			recordData(main_iter, directory, electron, ion, electCurrent, electDen, ionCurrent, ionDen, Phi, rho, E_l, E_t, B);
 		}
 	}
 	clock_t end = clock();

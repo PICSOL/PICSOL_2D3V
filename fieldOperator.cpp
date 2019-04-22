@@ -6,7 +6,8 @@ void gradient(vectorField &grad, scalarField &sfield, double coef)
 	double coefx = 0.5 * idx * coef;
 	double coefy = 0.5 * idy * coef;
 
-	for (size_t i = 1; i < rank_x - 1; i++)
+    #pragma omp parallel for 
+	for (int i = 1; i < (int)rank_x - 1; i++)
 	{
 		for (size_t j = 1; j < rank_y - 1; j++)
 		{
@@ -27,7 +28,8 @@ void divergence(scalarField &div, vectorField &vfield, double coef)
 	double coefx = 0.5 * idx * coef;
 	double coefy = 0.5 * idy * coef;
 
-	for (size_t i = 1; i < rank_x - 1; i++)
+    #pragma omp parallel for 
+	for (int i = 1; i < (int)rank_x - 1; i++)
 	{
 		for (size_t j = 1; j < rank_y - 1; j++)
 		{
@@ -51,7 +53,8 @@ void rotation(vectorField &rot, vectorField &vfield, double coef)
 	double coefy1 = -0.5 * idy * coef;
 	double coefy2 = 0.5 * idy * coef;
 
-	for (size_t i = 1; i < rank_x - 1; i++)
+    #pragma omp parallel for 
+	for (int i = 1; i < (int)rank_x - 1; i++)
 	{
 		for (size_t j = 1; j < rank_y - 1; j++)
 		{

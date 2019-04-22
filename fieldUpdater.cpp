@@ -1,14 +1,9 @@
 #include "fieldUpdater.h"
 
-/* temporary storage for RHS(right hand side of equaitons) */
-static scalarField sTemp(param);
-static vectorField vTemp(param);
-static scalarField Theta(param);
-
-
 void rhoComp(scalarField& electDen, scalarField& ionDen, scalarField& rho)
 {
-	for (size_t i = 0; i < rank_x; i++)
+    #pragma omp parallel for 
+	for (int i = 0; i < (int)rank_x; i++)
 	{
 		for (size_t j = 0; j < rank_y; j++)
 		{
@@ -29,7 +24,8 @@ void convectComp(vectorField& electCon, vectorField& ionCon, vectorField& convec
 
 void EtotalComp(vectorField& E_l, vectorField& E_t, vectorField& E_total)
 {
-	for (size_t i = 0; i < rank_x; i++)
+    #pragma omp parallel for 
+	for (int i = 0; i < (int)rank_x; i++)
 	{
 		for (size_t j = 0; j < rank_y; j++)
 		{
@@ -42,7 +38,11 @@ void EtotalComp(vectorField& E_l, vectorField& E_t, vectorField& E_total)
 
 void phiComp(scalarField &rho, scalarField &phi)
 {
-	for (size_t i = 0; i < rank_x; i++)
+	/* temporary storage for RHS(right hand side of equaitons) */
+	static scalarField sTemp(param);
+    
+    #pragma omp parallel for 
+	for (int i = 0; i < (int)rank_x; i++)
 	{
 		for (size_t j = 0; j < rank_y; j++)
 		{
@@ -60,6 +60,7 @@ void ElComp(scalarField &phi, vectorField &E_l)
 	gradient(E_l, phi, -1.0);
 
 	/* forward and backward difference at conducting wall boundaries */
+    
 	for (size_t j = 1; j < rank_y - 1; j++)
 	{
 		E_l.xval[0][j] = idx * (phi.val[0][j] - phi.val[1][j]);
@@ -85,6 +86,9 @@ void ElComp(scalarField &phi, vectorField &E_l)
 
 void BComp(vectorField &J, vectorField &B)
 {
+	/* temporary storage for RHS(right hand side of equaitons) */
+	static vectorField vTemp(param);
+
 	rotation(vTemp, J, -1.0);
 
 	/* OpenMP multithreading area for field updater */
@@ -112,8 +116,14 @@ void BComp(vectorField &J, vectorField &B)
 
 void EtComp(scalarField &rho, vectorField &Current, vectorField &Convect, vectorField &E_l, vectorField &B, vectorField &E_t)
 {
+	/* temporary storage for RHS(right hand side of equaitons) */
+	static scalarField sTemp(param);
+	static vectorField vTemp(param);
+	static scalarField Theta(param);
+
 	/* pre-Computaion process for A (coefficient matrix) and Q(right hand side) in helmholtz equation */
-	for (size_t i = 0; i < rank_x ; i++)
+    #pragma omp parallel for 
+	for (int i = 0; i < (int)rank_x ; i++)
 	{
 		for (size_t j = 0; j < rank_y ; j++)
 		{
@@ -142,6 +152,7 @@ void EtComp(scalarField &rho, vectorField &Current, vectorField &Convect, vector
 			helmholtzSOR(E_t.zval, vTemp.zval, sTemp.val);
 		}
 	}
+
 
 	divergence(sTemp, E_t, 1.0);
 
